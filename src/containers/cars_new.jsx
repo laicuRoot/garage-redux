@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchCars } from '../actions/index';
 
-class CarsIndex extends Component {
+class CarsNew extends Component {
   componentWillMount() {
     this.props.fetchCars();
   }
@@ -61,5 +61,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ fetchCars }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CarsIndex);
-
+export default connect(mapStateToProps, mapDispatchToProps)(CarsNew);
