@@ -6,6 +6,7 @@ import reduxPromise from 'redux-promise';
 import logger from 'redux-logger';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { createHistory as history } from 'history';
+import { reducer as formReducer } from 'redux-form';
 
 import '../assets/stylesheets/application.scss';
 
@@ -15,9 +16,9 @@ import CarsNew from './containers/cars_new';
 // Reducers
 import carsReducer from './reducers/cars_reducer';
 
-
 const reducers = combineReducers({
-  cars: carsReducer
+  cars: carsReducer,
+  form: formReducer
 });
 
 const middlewares = applyMiddleware(reduxPromise, logger);

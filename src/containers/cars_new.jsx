@@ -1,64 +1,80 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchCars } from '../actions/index';
+import { reduxForm, Field } from 'redux-form';
+import { createCar } from '../actions';
+
+const required = value => value ? undefined : 'Required';
+const plate = value => value && !/^[A-Z0-9.]/i.test(value) ? 'Invalid plate' : undefined;
 
 class CarsNew extends Component {
-  componentWillMount() {
-    this.props.fetchCars();
-  }
 
-  renderCars() {
-    return this.props.cars.map((car) => {
-      return (
-        <div key={car.id} className="card-product">
-          <img src="https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/skateboard.jpg" alt="placeholder" />
-          <div className="card-product-infos">
-            <h2>{car.brand} {car.model}</h2>
-            <p>Owner: <strong>{car.owner}</strong></p>
-          </div>
-        </div>
-      );
+  onSubmit = (values) => {
+    this.props.createCar(values, (car) => {
+      this.props.history.push('/'); // Navigate after submit
+      return car;
     });
   }
 
-  render() {
-    const style = {
-      backgroundImage: "linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url(https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/background.png)"
-    };
 
+  renderField({ input, label, type, meta: { touched, error, warning } }) {
     return (
-      <div className="container main-container">
-        <div className="row box">
-          <div className="col-sm-4">
-            <div className="banner" style={style}>
-              <div className="banner-container">
-                <h1>Add your car to  <strong>LaicuRoot Garage</strong>!</h1>
-                <p>Change your life and keep track of your cars</p>
-                <div className='flex-container'>
-                  <Link className="btn btn-flat" to="/cars/new">
-                    <span>Lets add a car!</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-sm-8">
-            {this.renderCars()}
-          </div>
-        </div>
+      <div className="form-group">
+        <label>{label}</label>
+        <input
+          className="form-control"
+          type={type}
+          {...input}
+        />
+        {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
       </div>
+    )
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
+        <Field
+          label="Brand"
+          name="brand"
+          type="text"
+          component={this.renderField}
+          validate={[required]}
+        />
+        <Field
+          label="Model"
+          name="model"
+          type="text"
+          component={this.renderField}
+          validate={[required]}
+        />
+        <Field
+          label="Owner"
+          name="owner"
+          type="text"
+          component={this.renderField}
+          validate={[required]}
+        />
+        <Field
+          label="Plate"
+          name="plate"
+          type="text"
+          component={this.renderField}
+          validate={[required, plate]}
+        />
+
+        <button
+          className="btn-flat"
+          type="submit"
+          disabled={this.props.pristine || this.props.submitting}
+        >
+          Add Car
+        </button>
+      </form>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return { cars: state.cars };
-}
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchCars }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CarsNew);
+export default reduxForm({ form: 'newCarForm' })(
+  connect(null, { createCar })(CarsNew)
+);
