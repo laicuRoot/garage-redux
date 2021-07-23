@@ -1,28 +1,25 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchCars } from '../actions/index';
+import { bindActionCreators } from 'redux';
+import { fetchCar } from '../actions/index';
 
-class CarsIndex extends Component {
-  componentWillMount() {
-    this.props.fetchCars();
+class CarsShow extends Component {
+  componentDidMount() {
+    if (!this.props.post) {
+      this.props.fetchCar(this.props.match.params.id);
+    }
   }
-
-  renderCars() {
-    return this.props.cars.map((car) => {
-      return (
-        <Link to={`/cars/${car.id}`} key={car.id}>
-          <div className="card-product">
-            <img src="https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/skateboard.jpg" alt="placeholder" />
-            <div className="card-product-infos">
-              <h2>{car.brand} {car.model}</h2>
-              <p>Owner: <strong>{car.owner}</strong></p>
-            </div>
-          </div>
-        </Link>
-      );
-    });
+  renderCar() {
+    return (
+      <div className="card-product">
+        <img src="https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/skateboard.jpg" alt="placeholder" />
+        <div className="card-product-infos">
+          <h2> {this.props.car.model}</h2>
+          <p>Owner: <strong>{this.props.car.owner}</strong></p>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -47,7 +44,7 @@ class CarsIndex extends Component {
             </div>
           </div>
           <div className="col-sm-8">
-            {this.renderCars()}
+            {this.renderCar()}
           </div>
         </div>
       </div>
@@ -55,13 +52,17 @@ class CarsIndex extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return { cars: state.cars };
+
+function mapStateToProps(state, ownProps) {
+  const idFromUrl = parseInt(ownProps.match.params.id, 10);
+  // From URL
+  const car = state.cars.find(car => car.id === idFromUrl);
+  console.log(state.cars)
+  return { car };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchCars }, dispatch);
+  return bindActionCreators({ fetchCar }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CarsIndex);
-
+export default connect(mapStateToProps, mapDispatchToProps)(CarsShow);
