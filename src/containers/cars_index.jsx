@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { fetchCars } from '../actions/index';
 
 class CarsIndex extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchCars();
   }
 
