@@ -11,6 +11,10 @@ class CarsShow extends Component {
     }
   }
 
+  handleClick = () => {
+    this.props.deleteCar(this.props.history, this.props.car);
+  }
+
   // deleteOnClick(e) {
   //   e.preventDefault();
   //   this.props.deleteCar(this.props.match.params.id);
@@ -23,11 +27,7 @@ class CarsShow extends Component {
         <div className="card-product-infos">
           <h2> {this.props.car.model}</h2>
           <p>Owner: <strong>{this.props.car.owner}</strong></p>
-          <button onClick={(e) => {
-            this.props.deleteCar(e, this.props.match.params.id);
-            this.props.history.push('/');
-          }}
-          >
+          <button onClick={this.handleClick}>
             Delete
           </button>
         </div>

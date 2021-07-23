@@ -36,14 +36,14 @@ export function fetchCar(id) {
   };
 }
 
-export function deleteCar(e, id) {
-  const promise = fetch(`https://wagon-garage-api.herokuapp.com/cars/${id}`, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' }
-  }).then(response => response.json());
+export function deleteCar(history, car) {
+  fetch(`https://wagon-garage-api.herokuapp.com/cars/${car.id}`, {
+    method: 'DELETE'
+  }).then(response => response.json())
+    .then(() => history.push(""));
   return {
     type: DELETE_CAR,
-    payload: promise
+    payload: car
   };
 }
 
