@@ -6,7 +6,7 @@ import { fetchCar, deleteCar } from '../actions/index';
 
 class CarsShow extends Component {
   componentDidMount() {
-    if (!this.props.post) {
+    if (!this.props.car) {
       this.props.fetchCar(this.props.match.params.id);
     }
   }
